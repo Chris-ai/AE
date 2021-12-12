@@ -4,8 +4,72 @@ import matplotlib.pyplot as plt
 import random
 import operator
 
+from collections import deque
+
 from City import City
 from Fitness import Fitness
+
+from collections import deque
+
+cityList = []
+
+def minimal_tsp():
+    return { "COMMENT"          : ""
+           , "DIMENSION"        : None
+           , "TYPE"             : None
+           , "EDGE_WEIGHT_TYPE" : None
+           , "CITIES"           : []}
+
+def scan_keywords(tsp,tspfile):
+    for line in tspfile:
+        words   = deque(line.split())
+        keyword = words.popleft().strip(": ")
+
+        if keyword == "COMMENT":
+            tsp["COMMENT"] += " ".join(words).strip(": ")
+        elif keyword == "NAME":
+            tsp["NAME"] = " ".join(words).strip(": ")
+        elif keyword == "TYPE":
+            tsp["TYPE"] = " ".join(words).strip(": ")
+        elif keyword == "DIMENSION":
+            tsp["DIMENSION"] = int(" ".join(words).strip(": "))
+        elif keyword == "EDGE_WEIGHT_TYPE":
+            tsp["EDGE_WEIGHT_TYPE"] = " ".join(words).strip(": ")
+        elif keyword == "NODE_COORD_SECTION":
+            break
+
+def read_int(words):
+    return int(words.popleft())
+
+def read_city(words, cityList):
+    x = float(words.popleft())
+    y = float(words.popleft())
+    cityList.append(City(x=int(x), y=int(y)))
+    
+def read_numbered_city_line(desired_number, words, cityList):
+    city_number = read_int(words)
+    if city_number == desired_number:
+        return read_city(words,cityList)
+    else:
+        print("Missing or mislabeld city: expected {0}".format(desired_number))
+
+def read_cities(tsp,tspfile):
+    for n in range(1, tsp["DIMENSION"] + 1):
+        line  = tspfile.readline()
+        words = deque(line.split())
+        if tsp["EDGE_WEIGHT_TYPE"] == "EUC_2D":
+            tsp["CITIES"].append(read_numbered_city_line(n, words, cityList))
+        elif tsp["EDGE_WEIGHT_TYPE"] == "GEO":
+            tsp["CITIES"].append(read_numbered_city_line(n, words, cityList))
+        else:
+            print("Unsupported coordinate type: " + tsp["EDGE_WEIGHT_TYPE"])
+            
+def read_tsp_file(path):
+    tspfile = open(path,'r')
+    tsp     = minimal_tsp()
+    scan_keywords(tsp,tspfile)
+    read_cities(tsp,tspfile)
+    tspfile.close()
 
 def createRoute(cityList):
     route = random.sample(cityList, len(cityList))
@@ -79,7 +143,6 @@ def breedPopulation(matingpool, eliteSize):
         children.append(child)
     return children
 
-
 def mutate(individual, mutationRate):
     for swapped in range(len(individual)):
         if(random.random() < mutationRate):
@@ -108,7 +171,6 @@ def nextGeneration(currentGen, eliteSize, mutationRate):
     nextGeneration = mutatePopulation(children, mutationRate)
     return nextGeneration
 
-
 def geneticAlgorithm(population, popSize, eliteSize, mutationRate, generations):
     pop = initialPopulation(popSize, population)
     print("Initial distance: " + str(1 / rankRoutes(pop)[0][1]))
@@ -120,16 +182,6 @@ def geneticAlgorithm(population, popSize, eliteSize, mutationRate, generations):
     bestRouteIndex = rankRoutes(pop)[0][0]
     bestRoute = pop[bestRouteIndex]
     return bestRoute
-
-
-cityList = []
-
-for i in range(0,25):
-    cityList.append(City(x=int(random.random() * 200), y=int(random.random() * 200)))
-    
-route = geneticAlgorithm(population=cityList, popSize=100, eliteSize=20, mutationRate=0.01, generations=500)
-
-# print(route)
 
 def geneticAlgorithmPlot(population, popSize, eliteSize, mutationRate, generations):
     pop = initialPopulation(popSize, population)
@@ -144,6 +196,12 @@ def geneticAlgorithmPlot(population, popSize, eliteSize, mutationRate, generatio
     plt.ylabel('Distance')
     plt.xlabel('Generation')
     plt.show()
-    
 
-geneticAlgorithmPlot(population=cityList, popSize=100, eliteSize=20, mutationRate=0.01, generations=500)
+# TODO for na plikach tsp
+read_tsp_file('C:/Users/Krzysiek/Desktop/Studia/Algorytmy ewolucyjne/gr202.tsp')
+
+route = geneticAlgorithm(population=tsp['CITIES'], popSize=100, eliteSize=20, mutationRate=0.01, generations=500)
+
+print(route)
+
+# geneticAlgorithmPlot(population=cityList, popSize=100, eliteSize=20, mutationRate=0.01, generations=500)
