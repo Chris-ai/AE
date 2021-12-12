@@ -200,7 +200,7 @@ def geneticAlgorithmPlot(population, popSize, eliteSize, mutationRate, generatio
 # TODO for na plikach tsp
 read_tsp_file('C:/Users/Krzysiek/Desktop/Studia/Algorytmy ewolucyjne/gr202.tsp')
 
-route = geneticAlgorithm(population=tsp['CITIES'], popSize=100, eliteSize=20, mutationRate=0.01, generations=500)
+route = geneticAlgorithm(population=cityList, popSize=100, eliteSize=20, mutationRate=0.01, generations=500)
 
 print(route)
 
