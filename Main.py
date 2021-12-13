@@ -36,7 +36,6 @@ def scan_keywords(tsp, tspfile):
         elif keyword == "NODE_COORD_SECTION":
             break
 
-
 def read_int(words):
     return int(words.popleft())
 
@@ -225,14 +224,20 @@ read_tsp_file(
     'C:/Users/Krzysiek/Desktop/Studia/Algorytmy ewolucyjne/berlin52.tsp')
 
 print('==== Metoda 1 ====')
-route1 = geneticAlgorithm(population=cityList, popSize=100, eliteSize=20, mutationRate=0.01, generations=500)
+route1 = geneticAlgorithm(population=cityList, popSize=52, eliteSize=20, mutationRate=0.01, generations=2500,crossover=1)
 print(route1)
 print('\n')
 
-plt.plot(route1)
+# x = [item.x for item in route1]
+# y = [item.y for item in route1]
+
+# x, y = route1.T
+# plt.scatter(route1, 'r-')
+# plt.plot(x,y, marker='o')
+# plt.show()
 
 print('==== Metoda 2 ====')
-route2 = geneticAlgorithm(population=cityList, popSize=100, eliteSize=20, mutationRate=0.01, generations=500, crossover=2)
+route2 = geneticAlgorithm(population=cityList, popSize=52, eliteSize=20, mutationRate=0.01, generations=2500, crossover=2)
 print(route2)
 print('\n')
 
