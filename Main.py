@@ -224,10 +224,14 @@ def uniform(ind1, ind2, indpb = 1):
 read_tsp_file(
     'C:/Users/Krzysiek/Desktop/Studia/Algorytmy ewolucyjne/berlin52.tsp')
 
+<<<<<<< HEAD
 print('==== Metoda 1 ====')
 route1 = geneticAlgorithm(population=cityList, popSize=100, eliteSize=20, mutationRate=0.01, generations=500, crossover=1)
 print(route1)
 print('\n')
+=======
+route = geneticAlgorithm(population=cityList, popSize=100, eliteSize=20, mutationRate=0.01, generations=500)
+>>>>>>> b2ac8dbde3bbe6d0d2803ab6b2f91432b7a9b88f
 
 print('==== Metoda 2 ====')
 route2 = geneticAlgorithm(population=cityList, popSize=100, eliteSize=20, mutationRate=0.01, generations=500, crossover=2)
